@@ -9,8 +9,7 @@ import java.nio.file.Path;
 import java.util.List;
 
 public class Main {
-    private static final Path DEFAULT_SCAN_PATH = Path.of("C:", "Users", "Linus", "ProvaAntiVirus");
-    private static final Path DEFAULT_QUARANTINE_PATH = DEFAULT_SCAN_PATH.resolve("qurantena");
+    private static final Path DEFAULT_SCAN_PATH = Path.of(System.getProperty("user.home"), "ProvaAntiVirus");
 
     public static void main(String[] args) {
         Path scanPath = args.length >= 1 ? Path.of(args[0]) : DEFAULT_SCAN_PATH;
@@ -24,7 +23,7 @@ public class Main {
                 : Path.of("src", "main", "resources", "signatures.json");
         Path quarantinePath = args.length >= 3
                 ? Path.of(args[2])
-                : DEFAULT_QUARANTINE_PATH;
+                : scanPath.resolve("quarantine");
 
         try {
             SignaturesDataBases db = new SignaturesDataBases();
@@ -51,7 +50,7 @@ public class Main {
         System.out.println("  java com.tusell.Main <ruta-a-escanejar> [ruta-signatures] [ruta-quarantena]");
         System.out.println();
         System.out.println("Exemple:");
-        System.out.println("  java com.tusell.Main C:\\Users\\Linus\\Downloads");
+        System.out.println("  java com.tusell.Main C:\\ruta\\a\\escanejar");
         System.out.println("Si no passes ruta, s'escaneja per defecte: " + DEFAULT_SCAN_PATH);
     }
 

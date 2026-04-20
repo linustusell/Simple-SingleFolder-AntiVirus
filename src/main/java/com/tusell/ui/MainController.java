@@ -73,7 +73,7 @@ public class MainController {
     private void onStartScan() {
         Path scanPath = Path.of(scanPathField.getText().trim());
         Path signaturesPath = AntivirusService.DEFAULT_SIGNATURES_PATH;
-        Path quarantinePath = scanPath.resolve("qurantena");
+        Path quarantinePath = scanPath.resolve("quarantine");
 
         Task<ScanSummary> scanTask = new Task<>() {
             @Override

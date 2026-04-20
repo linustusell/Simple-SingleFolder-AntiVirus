@@ -10,9 +10,9 @@ import java.nio.file.Path;
 import java.util.List;
 
 public class AntivirusService {
-    public static final Path DEFAULT_SCAN_PATH = Path.of("C:", "Users", "Linus", "ProvaAntiVirus");
+    public static final Path DEFAULT_SCAN_PATH = Path.of(System.getProperty("user.home"), "ProvaAntiVirus");
     public static final Path DEFAULT_SIGNATURES_PATH = Path.of("src", "main", "resources", "signatures.json");
-    public static final Path DEFAULT_QUARANTINE_PATH = DEFAULT_SCAN_PATH.resolve("qurantena");
+    public static final Path DEFAULT_QUARANTINE_PATH = DEFAULT_SCAN_PATH.resolve("quarantine");
 
     public ScanSummary scan(Path scanPath, Path signaturesPath, Path quarantinePath) throws Exception {
         validateScanPath(scanPath);
