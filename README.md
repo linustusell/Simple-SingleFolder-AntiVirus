@@ -63,15 +63,6 @@ You can manually add hashes to the JSON file to detect:
 
 This project is made for **educational purposes** and is **not a replacement for professional antivirus software** such as Windows Defender, Malwarebytes, Bitdefender, etc.
 
-## Future Ideas
-
-- Real-time protection
-- Recursive scanning
-- GUI improvements
-- Automatic hash updates
-- File restore from quarantine
-- Better heuristic analysis
-
 ## License
 
 Open-source project for learning and experimentation.
