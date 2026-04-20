@@ -10,6 +10,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.ArrayList;
+import java.util.List;
 
 public class FileScanner {
 
@@ -22,7 +24,9 @@ public class FileScanner {
         this.quarantine = quarantine;
     }
 
-    public void scan(Path rootPath) throws IOException {
+    public List<ThreatResult> scan(Path rootPath) throws IOException {
+        List<ThreatResult> amenaces = new ArrayList<>();
+
         Files.walkFileTree(rootPath, new SimpleFileVisitor<Path>() {
 
             @Override
@@ -46,7 +50,7 @@ public class FileScanner {
                 }
 
                 if (resultat.esAmenaca()) {
-                    System.out.println("️Atenció " + file + " → " + resultat.getMotius());
+                    amenaces.add(resultat);
                     quarantine.registrar(file, resultat.getMotius());
                     quarantine.posar(file);
                 }
@@ -59,6 +63,7 @@ public class FileScanner {
                 return FileVisitResult.CONTINUE; // continua tot i l'error
             }
         });
+        return amenaces;
     }
 
     // Retorna true si l'extensió és perillosa

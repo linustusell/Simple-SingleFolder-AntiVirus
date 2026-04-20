@@ -21,6 +21,10 @@ public class ThreatResult {
         return !motius.isEmpty();
     }
 
+    public Path getFitxer() {
+        return fitxer;
+    }
+
     public List<String> getMotius() {
         return motius;
     }
