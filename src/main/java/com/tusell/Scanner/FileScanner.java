@@ -1,5 +1,9 @@
 package com.tusell.Scanner;
 
+import com.tusell.hash.HashCalculator;
+import com.tusell.hash.SignaturesDataBases;
+import com.tusell.quarantine.QuarantineManager;
+
 import java.io.IOException;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
@@ -9,12 +13,21 @@ import java.nio.file.attribute.BasicFileAttributes;
 
 public class FileScanner {
 
+    private HashCalculator hashCalculator = new HashCalculator();
+    private SignaturesDataBases signatureDB;
+    private QuarantineManager quarantine;
+
+    public FileScanner(SignaturesDataBases signatureDB,  QuarantineManager quarantine) {
+        this.signatureDB = signatureDB;
+        this.quarantine = quarantine;
+    }
+
     public void scan(Path rootPath) throws IOException {
         Files.walkFileTree(rootPath, new SimpleFileVisitor<Path>() {
 
             @Override
             public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                ThreatResult resultat = new ThreatResult(file);
+                ThreatResult resultat = new ThreatResult(file);  // ← PRIMER
 
                 if (extensioPerillosa(file))  resultat.afegirMotiu("Extensió perillosa");
                 if (esOcult(file))            resultat.afegirMotiu("Fitxer ocult");
@@ -22,8 +35,20 @@ public class FileScanner {
                 if (midaAnormal(attrs))       resultat.afegirMotiu("Mida anormal");
 
 
+                try {
+                    String hash = hashCalculator.calcularHash(file, "SHA-256");
+                    String malware = signatureDB.consultar(hash);
+                    if (malware != null) {
+                        resultat.afegirMotiu("Malware conegut: " + malware);
+                    }
+                } catch (Exception e) {
+                    System.err.println("No s'ha pogut calcular hash: " + file);
+                }
+
                 if (resultat.esAmenaca()) {
                     System.out.println("️Atenció " + file + " → " + resultat.getMotius());
+                    quarantine.registrar(file, resultat.getMotius());
+                    quarantine.posar(file);
                 }
                 return FileVisitResult.CONTINUE;
             }

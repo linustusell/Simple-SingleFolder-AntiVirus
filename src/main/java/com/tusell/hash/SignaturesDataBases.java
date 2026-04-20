@@ -36,6 +36,7 @@ public class SignaturesDataBases {
     // Comprova si un hash és malware conegut
     // Retorna el nom del malware o null si és net
     public String consultar(String hash) {
+
         return signatures.get(hash);
     }
 }
